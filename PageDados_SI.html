@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coleta Estatística Mensal (S.I.)</title>
+    <style>
+        /* VARIÁVEIS CSS (Sincronizadas com Cartorios_Adjuntos.html) */
+        :root {
+            --cor-primaria: #000000;   /* Preto */
+            --cor-destaque: #ed1c24;   /* Vermelho */
+            --cor-apoio: #bfa659;      /* Dourado */
+            --cor-fundo: #f4f4f4;      /* Cinza Claro */
+            --cor-texto: #333333;      /* Cinza Escuro */
+            --cor-borda: #cccccc;      /* Cinza Médio */
+            --cor-opaca: #a0a0a0;      /* Registros Processados */
+
+            --fonte-titulo: 'Arial', Arial light, sans-serif;
+            --fonte-texto: Arial, Helvetica, sans-serif;
+        }
+
+        /* ESTILOS GLOBAIS */
+        body {
+            font-family: var(--fonte-texto);
+            background-color: var(--cor-fundo);
+            margin: 0;
+            padding: 0;
+            color: var(--cor-texto);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* CABEÇALHO */
+        .header {
+            background-color: var(--cor-primaria);
+            color: #ffffff;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--cor-destaque);
+        }
+
+        .header img {
+            height: 60px;
+            margin-right: 25px;
+        }
+
+        .header-text h1 {
+            font-family: var(--fonte-titulo);
+            font-size: 1.2rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-text h2 {
+            font-family: var(--fonte-titulo);
+            font-size: 1.2rem;
+            margin: 5px 0 0 0;
+            font-weight: normal;
+            color: var(--cor-apoio);
+        }
+
+        .faixa-estado {
+            height: 0px;
+            background: linear-gradient(to right, var(--cor-primaria) 33%, #ffffff 33%, #ffffff 66%, var(--cor-destaque) 66%);
+        }
+
+        /* TÍTULO DA PÁGINA */
+        .page-title {
+            text-align: center;
+            padding: 20px 20px 10px;
+        }
+
+        .page-title h2 {
+            font-family: var(--fonte-titulo);
+            color: var(--cor-destaque);
+            font-size: 1.3rem;
+            margin: 0;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title h2::after {
+            content: '';
+            display: block;
+            width: 800px;
+            height: 0px;
+            background-color: var(--cor-apoio);
+            margin: 10px auto 0;
+        }
+
+        .instrucoes {
+            margin: 10px 20px;
+            padding: 15px;
+            border-left: 5px solid var(--cor-destaque);
+            background-color: #fdf2f2;
+            font-size: 0.95rem;
+        }
+
+        /* SEÇÕES DO FORMULÁRIO */
+        .form-section {
+            margin: 10px 20px 20px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            padding: 20px;
+            background-color: #fdfdfd;
+        }
+
+        .form-section h3 {
+            font-family: var(--fonte-titulo);
+            color: var(--cor-primaria);
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h3::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 1.1rem;
+            background-color: var(--cor-destaque);
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        /* GRID DE INPUTS SI */
+        .grid-input-si {
+            display: grid;
+            grid-template-columns: 1fr 120px 2fr 180px;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--cor-primaria);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: #fafafa;
+            transition: border-color 0.3s;
+        }
+
+        .input-destaque {
+            border: 1px solid var(--cor-destaque) !important;
+        }
+
+        /* BOTÕES */
+        .btn-adicionar {
+            background-color: var(--cor-destaque);
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 16px;
+            font-family: var(--fonte-titulo);
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-adicionar:hover {
+            background-color: #c7171e;
+        }
+
+        .action-button {
+            width: calc(50% - 40px);
+            margin: 0 20px 40px;
+            padding: 20px;
+            background-color: #136934;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-family: var(--fonte-titulo);
+            font-size: 1.0rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background-color: #0f5222;
+        }
+
+        /* TABELA DE REGISTROS */
+        .section-lista {
+            padding: 0 20px 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            text-align: left;
+            color: var(--cor-primaria);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            padding: 10px;
+            border-bottom: 2px solid var(--cor-borda);
+        }
+
+        .row-efetuada {
+            color: var(--cor-opaca);
+            font-style: normal;
+        }
+
+        .row-efetuada td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .btn-remover {
+            background: none;
+            border: 1px solid var(--cor-opaca);
+            color: var(--cor-opaca);
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+
+        /* RODAPÉ */
+        .footer {
+            background-color: var(--cor-primaria);
+            color: #ffffff;
+            text-align: center;
+            padding: 5px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <img src="brasao_pcsp.png" alt="Brasão PCSP">
+        <div class="header-text">
+            <h1>Polícia Civil do Estado de São Paulo</h1>
+            <h2>5º Distrito Policial de Jundiaí</h2>
+        </div>
+    </div>
+    <div class="faixa-estado"></div>
+
+    <div class="page-title">
+        <h2>Coleta Estatística Mensal</h2>
+    </div>
+
+    <div class="instrucoes">
+        <strong>AO SETOR DE INVESTIGAÇÕES:</strong> Adicione os casos esclarecidos. Para concluir, preencha o responsável e clique em Informar Dados.
+    </div>
+
+    <div class="form-section">
+        <h3>Entrada de Casos Esclarecidos</h3>
+        <div class="grid-input-si">
+            <div class="input-group">
+                <label for="in-spj">SPJ</label>
+                <input type="text" id="in-spj" class="input-destaque" placeholder="Ex: RS1234">
+            </div>
+            <div class="input-group">
+                <label for="in-ano">ANO</label>
+                <input type="number" id="in-ano" value="2026">
+            </div>
+            <div class="input-group">
+                <label for="in-natureza">NATUREZA</label>
+                <input type="text" id="in-natureza" placeholder="Natureza Penal">
+            </div>
+            <button type="button" class="btn-adicionar" onclick="adicionarCaso()">Adicionar</button>
+        </div>
+    </div>
+
+    <div class="section-lista">
+        <table id="tabelaCasos">
+            <thead>
+                <tr>
+                    <th width="20%">SPJ</th>
+                    <th width="15%">ANO</th>
+                    <th width="50%">NATUREZA PENAL</th>
+                    <th width="15%"></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="form-section">
+        <h3>Responsável pela Informação</h3>
+        <div class="input-group">
+            <label for="responsavel">Nome do Investigador(a)</label>
+            <input type="text" id="responsavel" name="responsavel" required placeholder="Digite seu nome completo">
+        </div>
+    </div>
+
+    <button type="button" class="action-button" onclick="consolidarEcopiar()">Informar Dados ao Cartório Central</button>
+
+    <div class="footer">
+        <p>© 2026 Polícia Civil do Estado de São Paulo - DEINTER 2 - Delegacia Seccional de Jundiaí.</p>
+        <p>Em desenvolvimento por Rodrigo Reis.</p>
+    </div>
+</div>
+
+<script>
+    const casos = [];
+
+    function adicionarCaso() {
+        const spj = document.getElementById('in-spj');
+        const ano = document.getElementById('in-ano');
+        const natureza = document.getElementById('in-natureza');
+
+        if (!spj.value || !ano.value || !natureza.value) {
+            alert("Preencha todos os campos ativos para adicionar.");
+            return;
+        }
+
+        const novoCaso = { spj: spj.value, ano: ano.value, natureza: natureza.value };
+        casos.push(novoCaso);
+
+        const tbody = document.getElementById('tabelaCasos').querySelector('tbody');
+        const row = tbody.insertRow();
+        row.className = "row-efetuada";
+        row.innerHTML = `
+            <td>${novoCaso.spj}</td>
+            <td>${novoCaso.ano}</td>
+            <td>${novoCaso.natureza}</td>
+            <td style="text-align: right;"><button class="btn-remover" onclick="removerLinha(this, ${casos.length - 1})">Remover</button></td>
+        `;
+
+        spj.value = "";
+        natureza.value = "";
+        spj.focus();
+    }
+
+    function removerLinha(btn, index) {
+        btn.closest('tr').remove();
+        casos.splice(index, 1);
+    }
+
+    function consolidarEcopiar() {
+        const responsavel = document.getElementById('responsavel').value;
+
+        if (casos.length === 0) {
+            alert("A lista está vazia.");
+            return;
+        }
+
+        if (!responsavel) {
+            alert("Por favor, preencha o nome do Responsável pela Informação.");
+            document.getElementById('responsavel').focus();
+            return;
+        }
+
+        const resultado = {
+            unidade: "5º DP Jundiaí - S.I.",
+            tipo: "Casos Esclarecidos",
+            responsavel: responsavel, // Campo incluído no JSON
+            data_coleta: new Date().toLocaleString('pt-BR'),
+            total_casos: casos.length,
+            itens: casos
+        };
+
+        navigator.clipboard.writeText(JSON.stringify(resultado, null, 2)).then(() => {
+            alert("Sucesso!\n\nDados consolidados e COPIADOS.\nResponsável: " + responsavel + "\nTotal de casos: " + casos.length);
+        });
+    }
+</script>
+
+</body>
+</html>
